@@ -23,7 +23,7 @@ timezone: Asia/Seoul
 
 title: Neoplanetz                          # the main title
 
-tagline: To record and exoand knowledge   # it will display as the sub-title
+tagline: To record and expand knowledge   # it will display as the sub-title
 
 description: >-                        # used by seo meta and the atom feed
   Computer Vision, Graphics Programer interesting ROS, Deep learning, Reinforcement learning, Unreal Engine, Unity, OpenGL, QT, Python, C++, front-end, backend, Flask, Dash, JavaScript, Vue.js, React.JS
