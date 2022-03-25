@@ -1,4 +1,4 @@
-# [Ubuntu] VS Code용 ROS2 환경설정 및  Debug 설정방법 (2022.03.25)
+# VS Code용 ROS2 환경설정 및  Debug 설정방법 (2022.03.25)
 
 ## 1. Visual Studio Code 설치
 - VS Code를 다운로드 및 설치 ([https://code.visualstudio.com/Download](https://code.visualstudio.com/Download))
