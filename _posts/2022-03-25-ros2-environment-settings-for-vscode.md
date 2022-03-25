@@ -62,7 +62,7 @@
 
 - 설정 단축키: Ctrl + ','
     - **ROS Distribute 설정**
-        - Settings에서 ROS: Distro 검색 후에 현재 ROS 버전을 입력(예: kinetic)            
+        - Settings에서 ROS: Distro 검색 후에 현재 ROS 버전을 입력(예: foxy)            
             ![ros_distro](/assets/img/ros_distro.png)
             
             
