@@ -1,6 +1,6 @@
 # [Ubuntu] VS Code용 ROS2 환경설정 및  Debug 설정방법 (2022.03.25)
 
-## 1. Visual Studio Code Installation
+## 1. Visual Studio Code 설치
 - VS Code를 다운로드 및 설치 ([https://code.visualstudio.com/Download](https://code.visualstudio.com/Download))
     
     ![vscode_install](/assets/img/vscode_install.png)
@@ -14,7 +14,6 @@
         |CMake|twxs.cmake|CMake 언어 지원|
         |CMake Tools|ms-vscode.cmake-tools|CMake 언어 지원 및 다양한 툴|
         |Python|ms-python.python|린팅, 디버깅, Intellisense, 코드 서식 지정, 리팩토링, 단위 테스트 등|
-        <br>
 
     + ROS Extensions (VS Code Extensions for ROS, URDF, Colcon)
 
@@ -23,7 +22,7 @@
         |ROS|ms-iot.vscode-ros|ROS 개발 지원|
         |URDF|smilerobotics.urdf|URDF / xacro 지원|
         |Colcon Tasks|deitry.colcon-helper|Colcon 명령어를 위한 VSCode Task|
-        <br>
+
     
     + File Format Extensions (VS Code Extensions for XML, YAML, Markdown)
 
@@ -32,7 +31,7 @@
         |XML Tools|dotjoshjohnson.xml|XML, XQuery, XPath 지원|
         |YAML|redhat.vscode-yaml|YAML 지원|
         |Markdown All in One|yzhang.markdown-all-in-one|Markdown 지원|
-        <br>
+
     
     + 유용한 Extensions (VS Code Extensions for Etc.)
 
@@ -41,10 +40,9 @@
         |Highlight Trailing White Spaces|ybaumes.highlight-trailing-white-spaces|의미 없이 사용된 공백의 스페이스 문자 강조|
         |EOF Mark|msfukui.eof-mark|[EOF]이 없이 끝난 파일에 [EOF] 문자 추가|
         |Better Comments|aaron-bond.better-comments|alert, informational, TODO 등의 코멘트 강화 기능|
-        <br>
     
 
-## 2. Visual Studio Code Develop Environment Setting
+## 2. Visual Studio Code 개발환경 설정
 ---
 ### 1) ROS WorkSpace 설정
 - Visual Studio Code에서 File에서 “ Add Folder to Workspace”를  선택하여 ROS2 설치시 설정한 workspace 폴더를 연다.
@@ -66,17 +64,17 @@
     - **ROS Distribute 설정**
         - Settings에서 ROS: Distro 검색 후에 현재 ROS 버전을 입력(예: kinetic)            
             ![ros_distro](/assets/img/ros_distro.png)
-            <br></br>
+            
             
     - **Colcon 설정**
         - Settings에서 Colcon: Provide Tasks를 검색 후 True로 체크            
             ![colcon_provide](/assets/img/colcon_provide.png)
-            <br></br>
+            
             
     - **Files Associations 설정**
         - Settings에서 Files: Associations 검색 후  다음과 같이 repos, world, xacro 를 추가            
             ![file_associations](/assets/img/file_associations.png)
-            <br></br>
+            
 
 ### 3) Task Setting(tasks.json) 설정
 ---
@@ -215,7 +213,7 @@
   }
 ```
 
-## 3. ROS Command in VS Code
+## 3. VS Code에서 ROS 명령 실행
 ---
 ### 1) ROS Core 실행
 - **ROS 2에서는 Core 실행이 필요 없지만 ROS 2 Daemon을 시작하여 ROS 2 Foxy Status 출력을 위해 사용함 (생략 가능)**
@@ -228,21 +226,17 @@
     > *현재 ROS2.foxy 에서는 문제가 있어 status 출력이 되지 않는것 같음
     > 
 
-<br />
 
 ### 2) ROS Core 중단
 - ROS 2에서는 Core 중단이 필요 없지만 ROS 2 Daemon을 중단하여 ROS 2 Foxy Status 출력을 중지시키기 위해 사용함 (생략 가능)
 - Ctrl + Shift + P 실행 후 ‘ROS: Stop’ 입력
 - ROS Core 를 중단함
-<br></br>
 
 ### 3) 새로운 ROS Package 생성
 - Ctrl + Shift + P 실행 후 ‘ROS: Create Catkin Package’ 입력
 - 새로운 ROS Package를 생성함
     - Package name : 생성할 package의 이름을 입력
     - Dependencies : 생성할 package의 의존성 package를 입력(예: roscpp, rviz, nav_msgs 등)
-<br></br>
-
 
 ### 4) ROS Node 실행(rosrun)
 - Ctrl + Shift + P 실행 후 ‘ROS: Run a ROS executable (rosrun)’ 입력
@@ -250,7 +244,6 @@
     - Choose a package : 실행할 ROS Node의 package를 입력
     - Choose an executable : 실행할 ROS Node 파일 입력
     - Enter any extra arguments : 추가적으로 넣을 arguments들을 입력
-<br></br>
 
 ### 5) ROS Launch 실행(roslaunch)
 - Ctrl + Shift + P 실행 후 ‘ROS: Run a ROS launch file (roslaunch)’ 입력
@@ -258,7 +251,6 @@
     - Choose a package : 실행할 ROS Launch파일의 package를 입력
     - Choose a launch file : 실행할 ROS Launch파일 입력
     - Enter any extra arguments : 추가적으로 넣을 arguments들을 입력
-<br></br>
 
 ### 6) ROS Build (Colcon Build)
 - Ctrl + Shift + B 실행 후, 상황에 맞게 ‘Colcon: build Option’ 입력
@@ -266,7 +258,7 @@
         - Colcon: build Debug : 디버깅 가능하도록 빌드
         - Colcon: build Release : 디버깅이 되지 않는 배포용 빌드
         - Colcon: build RelWithDebInfo : 배포용으로 빌드하지만 디버깅도 가능하도록 용량을 최대로 줄여 빌드
-      <br></br>
+      
 
 ## 4. ROS Debugging in VS Code
 ---
@@ -279,7 +271,7 @@
     - Ctrl + Shift + P 실행 후 ‘ROS: Run a ROS executable (rosrun)’ 입력
     - Choose a package : 디버깅할 ROS Node의 package를 입력 (예시: beginner_tutorials)
     - Choose an executable : 디버깅할 ROS Node 파일 입력 (예시: talker)
-    <br></br>
+    
   
 - VS Code의 Run and Debug (’Ctrl + Shift + D’)로 이동    
     ![vscode_debug_attach](/assets/img/vscode_debug_attach.png)
@@ -287,7 +279,7 @@
 - ‘ROS: Attach’를 선택하고 디버깅 플레이버튼 누름
 - Choose Runtime type of node to attach to 에는 현재 디버깅할 ROS Node의 Type을 선택(C++, Python)
 - Select the process to attach to 에는 위에서 실행했던 ROS Node의 이름(예시: talker)을 입력 및 선택하여 구동중인 ROS Node Process에 Debugger를 붙여 Debugging을 시작
-  <br></br>
+  
 
 ### 2) ROS Task 방법
 ![debug_rclcpp](/assets/img/debug_rclcpp.gif)
@@ -299,7 +291,7 @@
     - ‘Debug-rclcpp(gbd)’를 선택하고 디버깅 플레이버튼 누름
     - ROS Package Name 에 디버깅할 ROS Node의 Package 이름을 입력
     - ROS Node Name 에 디버깅할 ROS Node의 이름을 입력하면 ROS Node가 실행되며 Break 포인트가 걸려 디버깅이 시작
-    <br></br>
+    
     
 - **ROS Py 파일**    
     ![debug_rclpy](/assets/img/debug_rclpy.gif)
@@ -312,7 +304,7 @@
     - ‘Debug-rclpy(debugpy)’를 선택하고 디버깅 플레이버튼 누름
     - ROS Package Name 에 디버깅할 ROS Node의 Package 이름을 입력
     - ROS Node Name 에 디버깅할 ROS Node의 이름을 입력하면 ROS Node가 실행되며 Break 포인트가 걸려 디버깅이 시작
-    <br></br>    
+    
 
 ### 3) ROS Launch 파일 Debugging
 ![launch-and-debug-nodes](/assets/img/launch-and-debug-nodes.gif)
