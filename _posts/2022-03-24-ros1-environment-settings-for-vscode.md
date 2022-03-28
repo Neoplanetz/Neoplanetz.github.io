@@ -1,4 +1,4 @@
-# VS Code용 ROS2 환경설정 및  Debug 설정방법 (2022.03.25)
+# VS Code용 ROS1 환경설정 및  Debug 설정방법
 
 ## 1. Visual Studio Code 설치
 - VS Code를 다운로드 및 설치 ([https://code.visualstudio.com/Download](https://code.visualstudio.com/Download))
@@ -15,13 +15,13 @@
         |CMake Tools|ms-vscode.cmake-tools|CMake 언어 지원 및 다양한 툴|
         |Python|ms-python.python|린팅, 디버깅, Intellisense, 코드 서식 지정, 리팩토링, 단위 테스트 등|
 
+    
     + ROS Extensions (VS Code Extensions for ROS, URDF, Colcon)
 
         |Name|Code Name|Description|
         |----|----|----|
         |ROS|ms-iot.vscode-ros|ROS 개발 지원|
         |URDF|smilerobotics.urdf|URDF / xacro 지원|
-        |Colcon Tasks|deitry.colcon-helper|Colcon 명령어를 위한 VSCode Task|
 
     
     + File Format Extensions (VS Code Extensions for XML, YAML, Markdown)
@@ -45,10 +45,10 @@
 ## 2. Visual Studio Code 개발환경 설정
 ---
 ### 1) ROS WorkSpace 설정
-- Visual Studio Code에서 File에서 “ Add Folder to Workspace”를  선택하여 ROS2 설치시 설정한 workspace 폴더를 연다.
-    - Workspace 폴더명 예시: /home/username/ros2_ws
+- Visual Studio Code에서 File에서 “ Add Folder to Workspace”를  선택하여 ROS 설치시 설정한 catkin_ws 폴더를 연다.
+    - Workspace 폴더명 예시: /home/username/catkin_ws
         
-        ![ros2_workspace](/assets/img/ros2_workspace.png)
+        ![ros_workspace](/assets/img/ros_workspace.png)
         
 
 ### 2) User Setting(Settings.json) 설정
@@ -57,18 +57,12 @@
 
 - ROS 관련 설정
     1. ROS Distibute 설정: ROS 버전을 지정
-    2. Colcon Tasks 설정: Colcon이 지원되는 Task를 사용을 위한 설정
-    3. File Associations 설정: ROS에서 사용되는 파일 확장자를 명시
+    2. File Associations 설정: ROS에서 사용되는 파일 확장자를 명시
 
 - 설정 단축키: Ctrl + ','
     - **ROS Distribute 설정**
-        - Settings에서 ROS: Distro 검색 후에 현재 ROS 버전을 입력(예: foxy)            
-            ![ros_distro](/assets/img/ros_distro.png)
-            
-            
-    - **Colcon 설정**
-        - Settings에서 Colcon: Provide Tasks를 검색 후 True로 체크            
-            ![colcon_provide](/assets/img/colcon_provide.png)
+        - Settings에서 ROS: Distro 검색 후에 현재 ROS 버전을 입력(예: kinetic)            
+            ![ros_distro](/assets/img/ros_distro_kinetic.png)
             
             
     - **Files Associations 설정**
@@ -81,62 +75,74 @@
 - VSCode에서는 외부 프로그램을 Command Line Interface (CLI) 을 통해 연동하게 하는 기능이 있는데 이를 Task 라고 한다. 단순한 텍스트 에디터 기능이 기본인 VSCode가 다양한 기능을 수행하고 쉽게 기능 확장을 사용할 수 있게 된 것도 이 Task 기능이 있었기 때문이다.
 
 - ROS Task 설정
-    - Colcon: build Debug : 디버깅을 위한 빌드 설정
-    - Colcon: build Release : 릴리즈를 위한 빌드 설정
-    - Colcon: build RelWithDebInfo : 배포용으로 빌드하지만 디버깅도 가능하도록 용량을 최대로 줄여 빌드
-    - Colcon: Test : Test 를 위한 빌드 설정
-    - Colcon: Clean : Colcon Build 된 파일 및 폴더를 정리하도록 빌드 설정
+    - Catkin_make: Debug : 디버깅을 위한 빌드 설정
+    - Catkin_make: Release : 릴리즈를 위한 빌드 설정
+    - Catkin_make: RelWithDebInfo : 배포용으로 빌드하지만 디버깅도 가능하도록 용량을 최대로 줄여 빌드
+    - Catkin_make: Clean : Build 된 파일 및 폴더를 정리하도록 빌드 설정
 
 - 빌드 Task 설정 단축키: Ctrl + Shift +B
 
 - Build Task를 설정하기 위해 우선 Run Build Task (Ctrl + Shift +B) 을 실행하고 Configure Task를 선택하여 tasks.json을 다음과 같이 수정하여 ROS Colcon Build를 위한 Tasks를 설정한다.    
-    > tasks.json (~/ros2_ws/.vscode/tasks.json)
+    > tasks.json (~/catkin_make/.vscode/tasks.json)
     > 
     
     ```json
     {
       "version": "2.0.0",
-      "tasks": [
-        {
-          "label": "Colcon: build Debug",
-          "type": "shell",
-          "command": "colcon build --cmake-args '-DCMAKE_BUILD_TYPE=Debug'",
-          "problemMatcher": [],
-          "group": {
-            "kind": "build",
-            "isDefault": false
+      "tasks": [        
+          {
+            "label": "Catkin_make: Debug",
+            "type": "shell",
+            "command": "catkin_make",
+            "args": [
+                "-j12",
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS=1",
+                "-DCMAKE_CXX_STANDARD=14"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+          },
+          {
+            "label": "Catkin_make: Release",
+            "type": "shell",
+            "command": "catkin_make",
+            "args": [
+                "-j12",
+                "-DCMAKE_BUILD_TYPE=Release",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS=1",
+                "-DCMAKE_CXX_STANDARD=14"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+          },        
+          {
+            "label": "Catkin_make: RelWithDebInfo",
+            "type": "shell",
+            "command": "catkin_make",
+            "args": [
+                "-j12",
+                "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS=1",
+                "-DCMAKE_CXX_STANDARD=14"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+          },
+          {
+            "label": "Catkin_make: Clean",
+            "type": "shell",
+            "command": "rm -rf build devel install"
           }
-        },
-    		{
-          "label": "Colcon: build Release",
-          "type": "shell",
-          "command": "colcon build --cmake-args '-DCMAKE_BUILD_TYPE=Release'",
-          "problemMatcher": [],
-          "group": {
-            "kind": "build",
-            "isDefault": false
-          }
-        },
-    		{
-          "label": "Colcon: build RelWithDebInfo",
-          "type": "shell",
-          "command": "colcon build --cmake-args '-DCMAKE_BUILD_TYPE=RelWithDebInfo'",
-          "problemMatcher": [],
-          "group": {
-            "kind": "build",
-            "isDefault": false
-          }
-        },
-        {
-          "label": "Colcon: Test",
-          "type": "shell",
-          "command": "colcon test && colcon test-result"
-        },
-        {
-          "label": "Colcon: Clean",
-          "type": "shell",
-          "command": "rm -rf build install log"
-        }
       ]
     }
     ```
@@ -148,87 +154,84 @@
 - VSCode에서의 Launch는 'Run and Debug' (`Ctrl + Shift + d`)에서 사용되는 실행 명령어로 언어별, 디버거별로 설정이 가능하고 세부 옵션으로  Launch가 실행되기 전 즉 디버깅하기 전에 사용할 Task를 지정하거나 콘솔 기능을 설정할 수도 있다.
   
 - Launch 설정
-    - Debug-rclpy(debugpy) : debugpy를 이용해 rclpy를 디버깅
-    - Debug-rclcpp(gbd) : gdb를 이용핸 rclcpp를 디버깅하고 디버깅 전 미리 colcon build debug를 수행
+  - ROS: Attach : 실행중인 ROS Node에 디버거를 붙여 디버깅
+  - ROS: Launch : ROS Launch 파일을 Target에 설정해 디버깅
+  - Debug-rclpy(debugpy) : debugpy를 이용해 rclpy를 디버깅
+  - Debug-rclcpp(gbd) : gdb를 이용핸 rclcpp를 디버깅하고 디버깅 전 미리 Catkin_make: RelWithDebInfo를 수행
 
-> launch.json (~/ros2_ws/.vscode/launch.json)
+> launch.json (~/catkin_ws/.vscode/launch.json)
 > 
 
 ```json
 {
     "version": "0.2.0",
     "configurations": [
-      {
-        "name": "ROS: Attach",
-        "type": "ros",
-        "request": "attach"
-      },
-      {
-        "name": "ROS: Launch",
-        "type": "ros",
-        "request": "launch",
-        "target": "/home/username/ros2_ws/src/test_pkg/test_pkg.launch"
-      },
-      {
-        "name": "Debug-rclpy(debugpy)",
-        "type": "python",
-        "request": "launch",
-        "program": "${file}",
-        "console": "integratedTerminal"
-      },
-      {
-        "name": "Debug-rclcpp(gbd)",
-        "type": "cppdbg",
-        "request": "launch",
-        "program": "${workspaceFolder}/install/${input:package}/lib/${input:package}/${input:node}",
-        "args": [],
-        "preLaunchTask": "Colcon: build Debug",
-        "stopAtEntry": true,
-        "cwd": "${workspaceFolder}",
-        "externalConsole": false,
-        "MIMode": "gdb",
-        "setupCommands": [
+        {
+            "name": "ROS: Attach",
+            "type": "ros",
+            "request": "attach"
+        },
+        {
+            "name": "ROS: Launch",
+            "request": "launch",
+            "target": "/home/username/catkin_ws/src/test_pkg/launch/test_pkg.launch",
+            "type": "ros"
+        },
+        {
+            "name": "Debug-rospy(debugpy)",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+          },
           {
-            "description": "Enable pretty-printing for gdb",
-            "text": "-enable-pretty-printing",
-            "ignoreFailures": true
+            "name": "Debug-roscpp(gbd)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/devel/lib/${input:package}/${input:node}",
+            "args": [],
+            "preLaunchTask": "Catkin_make: RelWithDebInfo",
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+              {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+              }
+            ]
           }
-        ]
-      }
-    ],
-    "inputs": [
-      {
-        "id": "package",
-        "type": "promptString",
-        "description": "Input ROS2 Package Name you want to debugging",
-        "default": "ROS Package Name"
-      },
-      {
-        "id": "node",
-        "type": "promptString",
-        "description": "Input ROS Node Name you want to debugging",
-        "default": "ROS Node Name"
-      }
+        ],
+        "inputs": [
+          {
+            "id": "package",
+            "type": "promptString",
+            "description": "Input ROS Package Name you want to debugging",
+            "default": "ROS Package Name"
+          },
+          {
+            "id": "node",
+            "type": "promptString",
+            "description": "Input ROS Node Name you want to debugging",
+            "default": "ROS Node Name"
+          }
+
     ]
-  }
+}
 ```
 
 ## 3. VS Code에서 ROS 명령 실행
 ---
 ### 1) ROS Core 실행
-- **ROS 2에서는 Core 실행이 필요 없지만 ROS 2 Daemon을 시작하여 ROS 2 Foxy Status 출력을 위해 사용함 (생략 가능)**
 - Ctrl + Shift + P 실행 후 ‘ROS: Start’ 입력
     
     ![ros_core_status](/assets/img/ros_core_status.png)
     
-- VS Code 하단 파란 바에 ROS2.foxy 왼쪽에 체크표시가 있으면 ROS Core가 가동중이고, 그곳을 누르면 ROS Core의 정보가 출력됨(ROS Parameters, Topics, Services)*
-    
-    > *현재 ROS2.foxy 에서는 문제가 있어 status 출력이 되지 않는것 같음
-    > 
-
+- VS Code 하단 파란 바에 ROS1.kinetic 왼쪽에 체크표시가 있으면 ROS Core가 가동중이고, 그곳을 누르면 ROS Core의 정보가 출력됨(ROS Parameters, Topics, Services)
 
 ### 2) ROS Core 중단
-- ROS 2에서는 Core 중단이 필요 없지만 ROS 2 Daemon을 중단하여 ROS 2 Foxy Status 출력을 중지시키기 위해 사용함 (생략 가능)
 - Ctrl + Shift + P 실행 후 ‘ROS: Stop’ 입력
 - ROS Core 를 중단함
 
@@ -253,17 +256,18 @@
     - Enter any extra arguments : 추가적으로 넣을 arguments들을 입력
 
 ### 6) ROS Build (Colcon Build)
-- Ctrl + Shift + B 실행 후, 상황에 맞게 ‘Colcon: build Option’ 입력
-    - Colcon Build Options
-        - Colcon: build Debug : 디버깅 가능하도록 빌드
-        - Colcon: build Release : 디버깅이 되지 않는 배포용 빌드
-        - Colcon: build RelWithDebInfo : 배포용으로 빌드하지만 디버깅도 가능하도록 용량을 최대로 줄여 빌드
+- Ctrl + Shift + B 실행 후, 상황에 맞게 Catkin_make: Build Option’ 입력
+    - Catkin_make Build Options
+        - Catkin_make: Debug : 디버깅 가능하도록 빌드
+        - Catkin_make: Release : 디버깅이 되지 않는 배포용 빌드
+        - Catkin_make: RelWithDebInfo : 배포용으로 빌드하지만 디버깅도 가능하도록 용량을 최대로 줄여 빌드
+        - Catkin_make: Clean : Build된 파일 및 폴더를 삭제
       
 
 ## 4. ROS Debugging in VS Code
 ---
-- 우선적으로 Colcon: build Debug 나 build RelWithDebInfo 로 코드를 Build 한다
-    - Ctrl + Shift + B 실행 후, 상황에 맞게 ‘Colcon: build Debug’ 입력
+- 우선적으로 Catkin_make: Debug나 RelWithDebInfo로 코드를 Build 한다
+    - Ctrl + Shift + B 실행 후, 상황에 맞게 ‘Catkin_make: Debug’ 입력
 
 ### 1) ROS Attach 방법
 ![attach-to-cpp](/assets/img/attach-to-cpp.gif)
@@ -282,13 +286,13 @@
   
 
 ### 2) ROS Task 방법
-![debug_rclcpp](/assets/img/debug_rclcpp.gif)
+![debug_roscpp](/assets/img/debug_rclcpp.gif)
 - **ROS Cpp 파일**
     - 디버깅할 소스코드에 Break 포인트 설정
     - VS Code의 Run and Debug (’Ctrl + Shift + D’)로 이동        
-        ![vscode_debug_rclcpp](/assets/img/vscode_debug_rclcpp.png)
+        ![vscode_debug_roscpp](/assets/img/vscode_debug_roscpp.png)
         
-    - ‘Debug-rclcpp(gbd)’를 선택하고 디버깅 플레이버튼 누름
+    - ‘Debug-roscpp(gbd)’를 선택하고 디버깅 플레이버튼 누름
     - ROS Package Name 에 디버깅할 ROS Node의 Package 이름을 입력
     - ROS Node Name 에 디버깅할 ROS Node의 이름을 입력하면 ROS Node가 실행되며 Break 포인트가 걸려 디버깅이 시작
     
@@ -299,9 +303,9 @@
     - 디버깅할 소스코드에 Break 포인트 설정
     - VS Code의 Run and Debug (’Ctrl + Shift + D’)로 이동
         
-        ![vscode_debug_rclpy](/assets/img/vscode_debug_rclpy.png)
+        ![vscode_debug_rospy](/assets/img/vscode_debug_rospy.png)
         
-    - ‘Debug-rclpy(debugpy)’를 선택하고 디버깅 플레이버튼 누름
+    - ‘Debug-rospy(debugpy)’를 선택하고 디버깅 플레이버튼 누름
     - ROS Package Name 에 디버깅할 ROS Node의 Package 이름을 입력
     - ROS Node Name 에 디버깅할 ROS Node의 이름을 입력하면 ROS Node가 실행되며 Break 포인트가 걸려 디버깅이 시작
     
@@ -314,16 +318,9 @@
     ![vscode_debug_roslaunch](/assets/img/vscode_debug_roslaunch.png)
     
 - launch.json 파일 안에 ROS: Launch Configuration 항목 중, “target” 에 디버깅에 사용할 Launch 파일의 절대 경로를 입력하고 저장    
-    ![launch_json](/assets/img/launch_json.png)
+    ![ros1_launch_json](/assets/img/ros_launch_json.png)
     
 - F5 버튼이나 ‘ROS: Launch’를 선택하고 디버깅 플레이버튼 눌러 디버깅 시작
     - Launch 파일이 실행되며 위에서 설정한 Break 포인트에 디버깅 걸림
-    - 현재 VS Code의 ROS Extension의 버전 (0.8.2)에 문제가 있어 ROS2 Launch파일 디버깅이 안됨
-      > Ros 2 Launch파일 디버깅을 위해 임시로 ROS Extension의 버전을 0.6.8 로 다운그레이드 하여 사용해야함
-
-      - ROS Extension 0.6.8로 다운그레이드 하는 방법
-        - VS Code의 왼쪽 메뉴바 중 Extension 아이콘을 선택해 현재 설치해놓은 Extension 중 ROS Extension을 선택
-        - ROS Extension에 있는 톱니바퀴를 눌러 "Install Another Version"를 누른 후, 0.6.8 버전으로 설치 후 Reload Required 선택
-          ![vscode_install_another_ver](/assets/img/vscode_install_another_ver.png)
         
         
