@@ -318,5 +318,10 @@
     
 - F5 버튼이나 ‘ROS: Launch’를 선택하고 디버깅 플레이버튼 눌러 디버깅 시작
     - Launch 파일이 실행되며 위에서 설정한 Break 포인트에 디버깅 걸림
-        
-        
+    - 현재 VS Code의 ROS Extension의 버전 (0.8.2)에 문제가 있어 ROS2 Launch파일 디버깅이 안됨
+      > Ros 2 Launch파일 디버깅을 위해 임시로 ROS Extension의 버전을 0.6.8 로 다운그레이드 하여 사용해야함
+
+      - ROS Extension 0.6.8로 다운그레이드 하는 방법
+        - VS Code의 왼쪽 메뉴바 중 Extension 아이콘을 선택해 현재 설치해놓은 Extension 중 ROS Extension을 선택
+        - ROS Extension에 있는 톱니바퀴를 눌러 "Install Another Version"를 누른 후, 0.6.8 버전으로 설치 후 Reload Required 선택
+          ![vscode_install_another_ver](/assets/img/vscode_install_another_ver.png)
