@@ -25,24 +25,13 @@ sudo locale-gen en_US en_US.UTF-8
 sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-echo "[Add the ROS2 repository]"
-if [ ! -e /etc/apt/sources.list.d/ros2-latest.list ]; then
-  sudo sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu ${name_os_version} main" > /etc/apt/sources.list.d/ros2-latest.list'
-fi
-
 echo "[Download the ROS2 keys]"
-roskey=`apt-key list | grep "Open Robotics"`
-if [ -z "$roskey" ]; then
-  sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg
-fi
+sudo apt update && sudo apt install curl gnupg2 lsb-release -y
+sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg
 
-echo "[Check the ROS2 keys]"
-roskey=`apt-key list | grep "Open Robotics"`
-if [ -n "$roskey" ]; then
-  echo "[ROS2 key exists in the list]"
-else
-  echo "[Failed to receive the ROS2 key, aborts the installation]"
-  exit 0
+echo "[Add the ROS2 repository]"
+if [ ! -e /etc/apt/sources.list.d/ros2.list ]; then
+  sudo sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
 fi
 
 echo "[Update the package lists]"
@@ -53,7 +42,7 @@ sudo apt install -y ros-$name_ros_version-desktop ros-$name_ros_version-rmw-fast
 
 echo "[Environment setup and install ROS development tool packages]"
 source /opt/ros/$name_ros_version/setup.bash
-sudo apt install -y build-essential cmake git libbullet-dev python3-colcon-common-extensions python3-flake8 python3-pip python3-pytest-cov python3-rosdep python3-setuptools python3-vcstool wget
+sudo apt install -y build-essential cmake git libbullet-dev python3-colcon-common-extensions python3-flake8 python3-pip python3-pytest-cov python3-rosdep python3-setuptools python3-vcstool wget gpg
 python3 -m pip install -U argcomplete flake8-blind-except flake8-builtins flake8-class-newline flake8-comprehensions flake8-deprecated flake8-docstrings flake8-import-order flake8-quotes pytest-repeat pytest-rerunfailures pytest
 sudo apt install --no-install-recommends -y libasio-dev libtinyxml2-dev libcunit1-dev
 
@@ -122,6 +111,15 @@ sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `ls
 wget https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
 sudo apt update & sudo apt install gazebo11 libgazebo11-dev -y
 sudo apt install ros-foxy-gazebo-ros-pkgs -y
+
+echo "[Install Visual Studio Code]"
+wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
+sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+rm -f packages.microsoft.gpg
+sudo apt install apt-transport-https -y
+sudo apt update
+sudo apt install code -y
 
 source $HOME/.bashrc
 
