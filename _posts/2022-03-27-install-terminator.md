@@ -35,6 +35,7 @@ gedit ~/.config/terminator/config
 ```
 
 > Terminator Config File (~/.config/terminator/config)
+
 ```bash
 [global_config]
   handle_size = 0
